@@ -84,3 +84,18 @@ No projeto, foi criado um arquivo **AppDelegate.txt**.
 Copie todo o conteúdo deste arquivo e substritua no arquivo **AppDelegate.cs**.
 
 Exclua o arquivo **AppDelegate.txt**.
+
+## Dependências
+
+Algumas dependências serão adicionadas aos projetos:
+
+- [Refit - versão 3.10](https://www.nuget.org/packages/Refit/4.0.1) - Abstrair o consumo de serviços REST.
+
+# API 
+
+Não é intuito deste Hands On desenvolver toda a infraestrutura da nossa aplicação. Entretanto, devemos comunicar com uma API e, portanto, utilizaremos uma api pública.
+
+[Dog API](https://dog.ceo/dog-api) - Retornar informações sobre cachorros.
+
+Endereço base: https://dog.ceo
+
