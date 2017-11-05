@@ -2,17 +2,26 @@
 
 Hands On onde desenvolvemos uma pequena aplicação em Xamarin utilizando a abordagem tradicional e o Framework MVVM Cross.
 
-## Criação do Projeto
+## Table of Contents
+
+- [Criação do Projeto](#criaçao-do-Projeto)
+    - [Criar uma solution](#criar-uma-solution)
+	- [Criando o projeto "CORE"](#criando-o-projeto-core)
+	- [Criando o projeto "Android"](#criando-o-projeto-android)
+	- [Criando o projeto "IOS"](#criando-o-projeto-io)
+
+
+# Criação do Projeto
 
 Primeiramente devemos criar uma solução para conter nossos projetos.
 
-### Criar uma solution:
+## Criar uma solution
 
 File -> New -> Project -> Other Projects Types -> Visual Studio Solutions
 
 Em "Name" Informe o nome "HOMvvmCross"
 
-### Criando o projeto "CORE"
+## Criando o projeto "CORE"
 
 Assim como na abordagem do Xamarin.Forms, vamos criar um projeto Core que para concentrar tudo o que será comum em relação a nossa aplicação para as plataformas.
 
@@ -32,7 +41,7 @@ Em "Browse" informe: MVVMCross Starter Pack
 
 Clique em Install
 
-### Criando o projeto "Android"
+## Criando o projeto "Android"
 
 O projeto Android será criado manualmente e iremos adicionar as referências do projeto Core e também do framework MVVMCross.
 
@@ -57,7 +66,7 @@ Add -> Reference ... -> Projects -> HOMvvmCross.Core
 Exclua o arquivo **MainActivity.cs**.
 
 
-### Criando o projeto "IOS"
+## Criando o projeto "IOS"
 
 O projeto Ios também será criado manualmente com as referências do projeto Core e também do framework MVVMCross.
 
