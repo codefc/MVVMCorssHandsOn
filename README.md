@@ -2,16 +2,7 @@
 
 Hands On onde desenvolvemos uma pequena aplicação em Xamarin utilizando a abordagem tradicional e o Framework MVVM Cross.
 
-## Table of Contents
-
-- [Criação do Projeto](#criaçao-do-Projeto)
-    - [Criar uma solution](#criar-uma-solution)
-	- [Criando o projeto "CORE"](#criando-o-projeto-core)
-	- [Criando o projeto "Android"](#criando-o-projeto-android)
-	- [Criando o projeto "IOS"](#criando-o-projeto-io)
-
-
-# Criação do Projeto
+# Projeto
 
 Primeiramente devemos criar uma solução para conter nossos projetos.
 
