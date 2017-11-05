@@ -109,7 +109,8 @@ Conforme descrito no tópico anterior, será utilizada uma API pública como bac
 Ao executar a API [Dogs](https://dog.ceo) em seu navegador identificamos um padrão no objeto de retorno que consiste, basicamente, um objeto com duas propriedades - **status** e **Message**.
 
 Conforme o objeto JSON abaixo:
-```
+
+```javascript
 {
     "status": "<valor>,
     "message": any // qualquer coisa
@@ -134,7 +135,7 @@ Defina o nome da classe para **DogApiObjectReturn**.
 
 Abra a classe criada e insira o seguinte código:
 
-```
+```csharp
 using Newtonsoft.Json;
 
 public class DogApiObjectReturn<TMessage>
@@ -185,7 +186,7 @@ Esta interface terá como responsabilidade o encapsulamento das chamadas a serem
 
 Abra a interface criada e adicione o seguinte código como conteúdo do arquivo:
 
-```
+```csharp
 using HOMvvmCross.Core.Model;
 using Refit;
 using System.Collections.Generic;
@@ -221,7 +222,7 @@ Esta interface terá como responsabilidade de ser um contrato de serviço que se
 
 Abra a interface criada e adicione o seguinte código como conteúdo do arquivo:
 
-```
+```csharp
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -252,7 +253,7 @@ Defina o nome da classe para **DogApiService.cs**.
 
 Abra a classe criada e adicione o seguinte código como conteúdo do arquivo:
 
-```
+```csharp
 
 using HOMvvmCross.Core.Service.Interfaces;
 using HOMvvmCross.Core.Service.RestContract;
@@ -340,7 +341,7 @@ No projeto **Core**, clique com o botão direito do mouse na pasta ViewModels e 
 
 Adicione o seguinte código na classe **BreedsListViewModel.cs**:
 
-```
+```csharp
 
 using HOMvvmCross.Core.Service.Interfaces;
 using MvvmCross.Core.ViewModels;
@@ -408,7 +409,7 @@ Uma ViewModel é, basicamente, uma controladora. Ela não leva em consideração
 
 Adicione o seguinte código na classe **BreedImagesViewModel.cs**:
 
-```
+```csharp
 
 using HOMvvmCross.Core.Service.Interfaces;
 using MvvmCross.Core.ViewModels;
