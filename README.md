@@ -209,4 +209,265 @@ Observe que os dois métodos, ListBreeds e GetImagesOfBreed, estão anotados com
 
 Este contrato será utilizado, como padrão, juntamente com objetos disponíveis no pacote REFIT, instalado anteriormente.
 
-**EM DESENVOLVIMENTO** conclusão no dia 05/11/2017
+### Interface - IDogApiService.cs
+
+Clique com o botão direito do mouse sobre a pasta **Interfaces** e em seguida:
+
+Add -> Class ..
+
+Defina o nome da classe para **IDogApiService.cs**.
+
+Esta interface terá como responsabilidade de ser um contrato de serviço que será utilizado pelas ViewModels da aplicação. Assim, toda a necessidade de consumo de informações pelas ViewModels serão feitas através deste contrato que irá representar uma fachada a quaisquer  chamada direta a serviços fora das "fronteiras" do aplicativo, como consumo de serviços RESTs, entre outros.
+
+Abra a interface criada e adicione o seguinte código como conteúdo do arquivo:
+
+```
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace HOMvvmCross.Core.Service.Interfaces
+{
+    public interface IDogApiService
+    {
+        Task<List<string>> ListBreeds();
+
+        Task<List<string>> GetImagesOfBreed(string breedName);
+    }
+}
+
+```
+
+Coincidentemente os métodos disponíveis nesta interface possuem o mesmo nome dos métodos disponíveis na interface **IDogBreedApi**, porém não existe qualquer relação entre os contratos que determine a similaridade nas assinaturas. Mesmo com as assinaturas idênticas, observamos o tipo de reteorno diferente. Isso é importante para definir o que é de responsabilidade da API e o que é de resposabilidade do consumo de informação em sistemas externos. Havendo a necessidade de refatoração do serviço REST para consumo em outra fonte de informações ou até mesmo um cache local, a refatoração será feita, apenas, na classe que implementa o contrato **IDogApiService**, de forma que a aplicação que consome somente a interface, muitas vezes, não sofrerá qualquer alteração.
+
+### Classe - DogApiService.cs
+
+Agora que definimos os contratos que serão utilizados para consumo de um recurso externo através do protocolo REST e para consumo na aplicação, devemos criar a classe para executar, de fato, o trabalho "pesado".
+
+Clique com o botão direito do mouse sobre a pasta **Service** e em seguida:
+
+Add -> Class ..
+
+Defina o nome da classe para **DogApiService.cs**.
+
+Abra a classe criada e adicione o seguinte código como conteúdo do arquivo:
+
+```
+
+using HOMvvmCross.Core.Service.Interfaces;
+using HOMvvmCross.Core.Service.RestContract;
+using Refit;
+using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+
+namespace HOMvvmCross.Core.Service
+{
+    public class DogApiService : IDogApiService
+    {
+        private const string BASE_URL = "https://dog.ceo";
+
+        private IDogBreedApi _restService;
+
+        public DogApiService()
+        {
+            _restService = RestService.For<IDogBreedApi>(BASE_URL);
+        }
+        
+        public async Task<List<string>> GetImagesOfBreed(string breedName)
+        {
+            
+            List<string> breedsImages = new List<string>();
+
+            try
+            {
+                var breedsMessage = await _restService.GetImagesOfBreed(breedName);
+
+                if (breedsMessage.Success && breedsMessage.Message != null)
+                {
+                    breedsImages = breedsMessage.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteConsole(ex);
+            }
+
+            return breedsImages;
+        }
+
+        public async Task<List<string>> ListBreeds()
+        {
+            List<string> breeds = new List<string>();
+
+            try
+            {
+                var breedsMessage = await _restService.ListBreeds();
+
+                if (breedsMessage.Success && breedsMessage.Message != null)
+                {
+                    breeds = breedsMessage.Message;
+                }
+            }
+            catch(Exception ex)
+            {
+                WriteConsole(ex);
+            }
+
+            return breeds;
+        }
+
+        private void WriteConsole(Exception ex, [CallerMemberName]string methodName = "")
+        {
+            System.Diagnostics.Debug.WriteLine($"ERRO - {methodName} {ex.Message}");
+        }
+    }
+}
+
+
+```
+
+Esta classe possui implementações básicas, para fins didáticos. Porém, o seu conteúdo pode ser utilizado em um sistema real com algumas alterações, como por exemplo a verificação de internet e melhor tratamento de erros. Mas para o exemplo proposto, a implementação atende perfeitamente.
+
+Observe a utilização da classe **RestService**, provida pelo pacote do Refit. Sua documentação poderá ser consultada clicando [aqui](https://github.com/paulcbetts/refit).
+
+# Implementação das ViewModels
+
+Até o momento todo o trabaho feito foi, praticamente, na camada **Core**. Toda a infraestrutura necessária para alimentar a aplicação já foi implementada. Neste momento será necessária a implementação de duas novas classes ViewModel. Tais classes serão as controladoras das nossas Views que serão desenvolvidas nas plataformas Androido e IOS.
+
+No projeto **Core**, clique com o botão direito do mouse na pasta ViewModels e adicione duas classes - **BreedsListViewModel.cs** e **BreedImagesViewModel.cs**.
+
+Adicione o seguinte código na classe **BreedsListViewModel.cs**:
+
+```
+
+using HOMvvmCross.Core.Service.Interfaces;
+using MvvmCross.Core.ViewModels;
+using System;
+
+namespace HOMvvmCross.Core.ViewModels
+{
+    public class BreedsListViewModel : MvxViewModel
+    {
+        private MvxObservableCollection<string> _breeds;
+        private IDogApiService _dogApiService;
+
+        public MvxObservableCollection<string> Breeds
+        {
+            get { return _breeds; }        
+        }
+
+        private IMvxCommand<string> _breedClick;
+
+        public IMvxCommand<string> BreedClick
+        {
+            get
+            {
+                return _breedClick ?? (_breedClick = new MvxCommand<string>(ShowBreedImagesPage));
+            }
+        }
+
+        private void ShowBreedImagesPage(string breedName)
+        {
+            ShowViewModel<BreedImagesViewModel>(breedName);
+        }
+
+
+        public BreedsListViewModel(IDogApiService dogApiService)
+        {
+            _breeds = new MvxObservableCollection<string>();
+            _dogApiService = dogApiService;
+        }
+
+        public override async void Start()
+        {
+            base.Start();
+
+            try
+            {
+
+                var models = await _dogApiService.ListBreeds();
+
+                Breeds.AddRange(models);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"ERRO - Carregar listagem - {ex.Message}");
+            }
+
+        }
+
+    }
+}
+
+
+```
+
+Uma ViewModel é, basicamente, uma controladora. Ela não leva em consideração algum elemento ou objeto de tela. na verdade a ViewModel possui atributos e comportamentos. A classe acima possui um atributo chamado **Breeds** que é, na verdade, uma lista de raças. Além disso possui um comportamento, **BreedClick**, que é a ação a ser executada ao selecionar uma raça.
+
+Adicione o seguinte código na classe **BreedImagesViewModel.cs**:
+
+```
+
+using HOMvvmCross.Core.Service.Interfaces;
+using MvvmCross.Core.ViewModels;
+using System;
+
+namespace HOMvvmCross.Core.ViewModels
+{
+    public class BreedImagesViewModel : MvxViewModel
+    {
+        private MvxObservableCollection<string> _images;
+        private IDogApiService _dogApiService;
+
+        public MvxObservableCollection<string> Images
+        {
+            get { return _images; }
+        }
+
+        private string _breedName;
+
+        public void Init(string breedName)
+        {
+            _breedName = breedName;
+        }
+
+        public BreedImagesViewModel(IDogApiService dogApiService)
+        {
+            _images = new MvxObservableCollection<string>();
+            _dogApiService = dogApiService;
+        }
+
+        public override async void Start()
+        {
+            base.Start();
+
+            try
+            {
+
+                var models = await _dogApiService.GetImagesOfBreed(_breedName);
+
+                Images.AddRange(models);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"ERRO - Carregar imagens - {ex.Message}");
+            }
+
+        }
+    }
+}
+
+
+```
+
+A ViewModel criada acima possui uma diferença em relação à criada anteriormente. Observe o método **Init**. Ele recebe como parâmetro uma string representando uma raça. O framework MVVMCross possui um padrâo de navegação que é utilizado ao navegar entre as "ViewModels" através do método **ShowViewModel**. Os parâmetros informados neste método serão atribuídos, respectivamente, aos parâmetros definidos no métod **Init** da ViewModel na qual será exibida. É uma convenção. Para maiores detalhes, consultar o seguinte link: [Api Lifecicle](https://www.mvvmcross.com/documentation/fundamentals/app-lifecycle).
+
+# Criando as telas no projeto Android
+
+EM BREVE
+
+# Criando as telas no projeto IOS
+
+EM BREVE

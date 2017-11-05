@@ -1,13 +1,12 @@
 ﻿using HOMvvmCross.Core.Service.Interfaces;
 using MvvmCross.Core.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HOMvvmCross.Core.ViewModels
 {
+    /// <summary>
+    /// View Model que representa a tela de listagem de raçcas
+    /// </summary>
     public class BreedsListViewModel : MvxViewModel
     {
         private MvxObservableCollection<string> _breeds;
@@ -15,11 +14,7 @@ namespace HOMvvmCross.Core.ViewModels
 
         public MvxObservableCollection<string> Breeds
         {
-            get { return _breeds; }
-            set
-            {
-                SetProperty(ref _breeds, value);
-            }
+            get { return _breeds; }        
         }
 
         private IMvxCommand<string> _breedClick;
@@ -29,20 +24,6 @@ namespace HOMvvmCross.Core.ViewModels
             get
             {
                 return _breedClick ?? (_breedClick = new MvxCommand<string>(ShowBreedImagesPage));
-            }
-        }
-
-        private bool _isBusy;
-
-        public bool IsBusy
-        {
-            get
-            {
-                return _isBusy;
-            }
-            set
-            {
-                SetProperty(ref _isBusy, value);
             }
         }
 
@@ -62,24 +43,18 @@ namespace HOMvvmCross.Core.ViewModels
         {
             base.Start();
 
-            IsBusy = true;
-
             try
             {
 
                 var models = await _dogApiService.ListBreeds();
 
-                _breeds.AddRange(models);
-            } catch
-            {
-                // Log
+                Breeds.AddRange(models);
             }
-            finally
+            catch (Exception ex)
             {
-                IsBusy = false;
+                System.Diagnostics.Debug.WriteLine($"ERRO - Carregar listagem - {ex.Message}");
             }
 
-           
         }
 
     }

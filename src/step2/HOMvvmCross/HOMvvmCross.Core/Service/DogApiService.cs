@@ -1,20 +1,28 @@
 ﻿using HOMvvmCross.Core.Service.Interfaces;
+using HOMvvmCross.Core.Service.RestContract;
+using Refit;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HOMvvmCross.Core.Model;
-using Refit;
-using HOMvvmCross.Core.Service.RestContract;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace HOMvvmCross.Core.Service
 {
+    /// <summary>
+    /// Classe de serviço responsável por implementar toda a lógica negocial necessária na aplicação.
+    /// Abstrai toda as chamadas a fontes externas ao aplicativo, como o consumo de serviços REST e
+    /// preparação dos dados retornados para a aplicação
+    /// </summary>
     public class DogApiService : IDogApiService
     {
+        /// <summary>
+        /// Endereço base da API
+        /// </summary>
         private const string BASE_URL = "https://dog.ceo";
 
+        /// <summary>
+        /// Contrato de serviço, no padrão REFIT, que contém os métodos da API que serão consumidos
+        /// </summary>
         private IDogBreedApi _restService;
 
         public DogApiService()
