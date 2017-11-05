@@ -462,7 +462,7 @@ namespace HOMvvmCross.Core.ViewModels
 
 ```
 
-A ViewModel criada acima possui uma diferença em relação à criada anteriormente. Observe o método **Init**. Ele recebe como parâmetro uma string representando uma raça. O framework MVVMCross possui um padrâo de navegação que é utilizado ao navegar entre as "ViewModels" através do método **ShowViewModel**. Os parâmetros informados neste método serão atribuídos, respectivamente, aos parâmetros definidos no métod **Init** da ViewModel na qual será exibida. É uma convenção. Para maiores detalhes, consultar o seguinte link: [Api Lifecicle](https://www.mvvmcross.com/documentation/fundamentals/app-lifecycle).
+A ViewModel criada acima possui uma diferença em relação à criada anteriormente. Observe o método **Init**. Ele recebe como parâmetro uma string representando uma raça. O framework MVVMCross possui um padrâo de navegação que é utilizado ao navegar entre as "ViewModels" através do método **ShowViewModel**. Os parâmetros informados neste método serão atribuídos, respectivamente, aos parâmetros definidos no métod **Init** da ViewModel na qual será exibida. É uma convenção. Para maiores detalhes, consultar o seguinte link: [Api Lifecycle](https://www.mvvmcross.com/documentation/fundamentals/app-lifecycle).
 
 # Criando as telas no projeto Android
 
