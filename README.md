@@ -112,7 +112,7 @@ Conforme o objeto JSON abaixo:
 
 ```javascript
 {
-    "status": "<valor>,
+    "status": "<valor>",
     "message": any // qualquer coisa
 }
 ```
@@ -467,7 +467,14 @@ A ViewModel criada acima possui uma diferença em relação à criada anteriorme
 
 # Criando as telas no projeto Android
 
-EM BREVE
+O projeto Android foi criado anteriormente. Por isso, já possuímos a base do aplicativo totalmente configurada.
+
+Seguindo a convenção proposta pelo MVVM Cross temos uma ViewModel e para representar a View ( UI ou Tela) desenvolvida na plataforma específica. A relação é:
+
+- **Projeto Core**
+  - \<name>ViewModel - alguma classe com o sufixo **ViewModel**. A ViewModel herda de 
+- **Projeto Android**
+  - \<name>View - alguma classe com o sufixo View.
 
 # Criando as telas no projeto IOS
 
